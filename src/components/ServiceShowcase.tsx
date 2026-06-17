@@ -130,6 +130,7 @@ export function ServiceShowcase() {
                 <img
                   src={item.image}
                   alt={item.title}
+                  loading="lazy"
                   className="w-full h-80 object-cover mb-6 rounded-md shadow-sm border border-slate-200" 
                 />
                 <h4 className="text-2xl font-bold text-slate-800 mb-4">

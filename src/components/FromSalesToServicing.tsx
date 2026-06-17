@@ -65,6 +65,7 @@ export function FromSalesToServicing() {
             <img 
               src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
               alt="Industrial Engineering Map" 
+              loading="lazy"
               className="absolute inset-0 w-full h-full object-cover rounded-lg shadow-md opacity-90"
             />
             <div className="absolute inset-0 bg-gradient-to-tr from-slate-900/40 to-transparent rounded-lg"></div>
