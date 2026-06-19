@@ -1,0 +1,26 @@
+FIRE PROTECTION SYSTEM
+1. Water-Based System
+2. Hydrant System
+3. Sprinkles System
+4. MVWS & HVWS System
+5. Foam System
+6. Gas Suppression System Gas Suppression System
+7. Co2/FM-200/Inergen System
+8. Fire Detection & Alarm System
+9. HEAVY ENGINEERING FABRICATION
+10. Pipe Rack & Super Structures Tank & Vessel Manufacturing
+11. Tower & Chimney Manufacturing 
+SECURITY SYSTEM
+1. Access Control System
+2. Video Surveillance System
+3. Intrusion Alarm System
+4. Perimeter Protection System
+5. Public Address System 
+PROCESS & UTILITY PIPING SYSTEM
+1. Compressed Air Piping
+2. IBR Steam Piping
+3. Fuel Transfer System
+4. Chilled Water Piping System
+5. Sewage Transfer System
+6. Hot & Cold Acoustic Insulation
+7. Falls ceiling Insulation      

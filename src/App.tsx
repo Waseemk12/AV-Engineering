@@ -4,6 +4,8 @@ import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { Services } from './components/Services';
 import { ServiceShowcase } from './components/ServiceShowcase';
+import { DetailedServices } from './components/DetailedServices';
+import { Projects } from './components/Projects';
 import { WhyChooseUs } from './components/WhyChooseUs';
 import { FromSalesToServicing } from './components/FromSalesToServicing';
 import { ContactUs } from './components/ContactUs';
@@ -20,6 +22,8 @@ export function App() {
         <Hero />
         <Services />
         <ServiceShowcase />
+        <DetailedServices />
+        <Projects />
         <WhyChooseUs />
         <FromSalesToServicing />
         <ContactUs />
