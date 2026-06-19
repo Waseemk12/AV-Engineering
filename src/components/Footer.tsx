@@ -1,5 +1,4 @@
 import React from 'react';
-import { Facebook, Instagram, Linkedin, Youtube } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -9,7 +8,7 @@ export function Footer() {
           {/* Left Column */}
           <div className="md:w-5/12 mb-8 md:mb-0">
             <img
-              src="/logo.png"
+              src="/logo-av.png"
               alt="AV Engineering Logo"
               className="max-h-24 mb-6 object-contain"
             />
@@ -29,22 +28,6 @@ export function Footer() {
                 Business District<br />
                 Cityville, State 12345, US
               </p>
-            </div>
-            
-            {/* Social Links */}
-            <div className="flex space-x-4">
-              <a href="#" className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-blue-700 hover:text-white transition-colors">
-                <Linkedin size={20} />
-              </a>
-              <a href="#" className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-pink-600 hover:text-white transition-colors">
-                <Instagram size={20} />
-              </a>
-              <a href="#" className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-blue-600 hover:text-white transition-colors">
-                <Facebook size={20} />
-              </a>
-              <a href="#" className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-red-600 hover:text-white transition-colors">
-                <Youtube size={20} />
-              </a>
             </div>
           </div>
         </div>

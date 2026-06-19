@@ -20,7 +20,7 @@ export function Navbar() {
             <a href="#">
               <img
                 className="h-48 w-auto object-contain -my-12"
-                src="/logo.png"
+                src="/logo-av.png"
                 alt="AV Engineering Logo" />
             </a>
           </div>
