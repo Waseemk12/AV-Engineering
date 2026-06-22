@@ -21,12 +21,11 @@ export function Footer() {
           <div className="md:w-5/12 ml-auto">
             <h4 className="text-xl font-bold text-slate-800 mb-6">Contact us</h4>
             <div className="text-slate-600 text-sm leading-loose mb-6">
-              <p>Sales : <a href="tel:+15551234567" className="text-blue-600 hover:underline">+1 (555) 123-4567</a></p>
-              <p>Email : <a href="mailto:contact@example.com" className="text-blue-600 hover:underline">contact@example.com</a></p>
+              <p>Sales : <a href="tel:+917410176954" className="text-blue-600 hover:underline">+91 7410176954</a></p>
+              <p>Email : <a href="mailto:avengineeringandcompany@gmail.com" className="text-blue-600 hover:underline">avengineeringandcompany@gmail.com</a></p>
               <p className="mt-4 leading-relaxed">
-                123 Generic Street, Suite 100<br />
-                Business District<br />
-                Cityville, State 12345, US
+                S No. 284/1, Flat No. B/309 Silver Treasure,<br />
+                Mawal, Pune, Talegaon Dhabade, 412106
               </p>
             </div>
           </div>

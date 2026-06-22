@@ -6,18 +6,18 @@ export function TopBar() {
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <div className="flex items-center space-x-6">
           <a
-            href="tel:+1234567890"
+            href="tel:+917410176954"
             className="flex items-center hover:text-blue-600">
             
             <Phone className="w-3 h-3 mr-2" />
-            Sales : +1 (555) 123-4567
+            Sales : +91 7410176954
           </a>
           <a
-            href="mailto:contact@example.com"
+            href="mailto:avengineeringandcompany@gmail.com"
             className="flex items-center hover:text-blue-600">
             
             <Mail className="w-3 h-3 mr-2" />
-            contact@example.com
+            avengineeringandcompany@gmail.com
           </a>
         </div>
       </div>

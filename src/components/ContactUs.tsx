@@ -22,7 +22,7 @@ export function ContactUs() {
     const body = encodeURIComponent(
       `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\nMessage:\n${formData.message}`
     );
-    window.location.href = `mailto:contact@example.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:avengineeringandcompany@gmail.com?subject=${subject}&body=${body}`;
   };
 
   return (
@@ -44,18 +44,18 @@ export function ContactUs() {
                 Fill up the form and our team will get back to you within 24 hours.
               </p>
               <div className="space-y-6">
-                <div className="flex items-start">
-                  <Phone className="w-6 h-6 mr-4 flex-shrink-0 text-blue-200" />
-                  <span>+1 (555) 123-4567<br/>+1 (555) 987-6543</span>
-                </div>
                 <div className="flex items-center">
-                  <Mail className="w-6 h-6 mr-4 flex-shrink-0 text-blue-200" />
-                  <span>contact@example.com</span>
-                </div>
-                <div className="flex items-start">
-                  <MapPin className="w-6 h-6 mr-4 flex-shrink-0 text-blue-200" />
-                  <span>123 Generic Street, Suite 100<br/>Business District<br/>Cityville, State 12345, US</span>
-                </div>
+                <Phone className="w-5 h-5 mr-4" />
+                <span>+91 7410176954</span>
+              </div>
+              <div className="flex items-center">
+                <Mail className="w-5 h-5 mr-4" />
+                <span>avengineeringandcompany@gmail.com</span>
+              </div>
+              <div className="flex items-start">
+                <MapPin className="w-5 h-5 mr-4 mt-1" />
+                <span>S No. 284/1, Flat No. B/309 Silver Treasure, Mawal, Pune, Talegaon Dhabade, 412106</span>
+              </div>
               </div>
             </div>
           </div>
