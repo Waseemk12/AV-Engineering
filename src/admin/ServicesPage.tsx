@@ -112,10 +112,8 @@ export function ServicesPage() {
             <Wrench className="w-5 h-5 text-blue-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-800">Services</h1>
-            <p className="text-sm text-slate-500">
-              {services.length} {services.length === 1 ? 'service' : 'services'}
-            </p>
+            <h1 className="text-2xl font-bold text-slate-800">Main Services</h1>
+            <p className="text-sm text-slate-500">Manage the primary services shown on the frontend.</p>
           </div>
         </div>
         {!showForm && (
