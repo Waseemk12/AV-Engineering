@@ -66,6 +66,7 @@ export function DashboardPage() {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedMessage, setSelectedMessage] = useState<string | null>(null);
 
   const fetchInquiries = async () => {
     setLoading(true);
@@ -160,24 +161,26 @@ export function DashboardPage() {
           <h2 className="text-lg font-semibold text-slate-800">Recent Inquiries</h2>
         </div>
         {recentInquiries.length === 0 ? (
-          <div className="px-6 py-8 md:py-12 text-center text-slate-400">
+          <div className="px-6 py-12 text-center text-slate-400">
             No inquiries yet
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <>
+          {/* Desktop Table View */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-slate-100">
-                  <th className="text-left text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 md:px-6 py-2 md:py-3">
+                  <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wider px-6 py-3">
                     Name
                   </th>
-                  <th className="hidden sm:table-cell text-left text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 md:px-6 py-2 md:py-3">
+                  <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wider px-6 py-3">
                     Email
                   </th>
-                  <th className="text-left text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 md:px-6 py-2 md:py-3">
+                  <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wider px-6 py-3">
                     Status
                   </th>
-                  <th className="hidden sm:table-cell text-left text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 md:px-6 py-2 md:py-3">
+                  <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wider px-6 py-3">
                     Date
                   </th>
                 </tr>
@@ -185,18 +188,18 @@ export function DashboardPage() {
               <tbody className="divide-y divide-slate-100">
                 {recentInquiries.map((inq) => (
                   <tr key={inq._id} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-3 md:px-6 py-2 md:py-3.5 text-xs md:text-sm font-medium text-slate-800 break-words max-w-[120px]">
+                    <td className="px-6 py-3.5 text-sm font-medium text-slate-800">
                       {inq.name}
                     </td>
-                    <td className="hidden sm:table-cell px-3 md:px-6 py-2 md:py-3.5 text-xs md:text-sm text-slate-600 truncate max-w-[150px]">{inq.email}</td>
-                    <td className="px-3 md:px-6 py-2 md:py-3.5">
+                    <td className="px-6 py-3.5 text-sm text-slate-600">{inq.email}</td>
+                    <td className="px-6 py-3.5">
                       <span
-                        className={`inline-flex items-center px-2 md:px-2.5 py-0.5 rounded-full text-[10px] md:text-xs font-medium ${badgeStyles[inq.status]}`}
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${badgeStyles[inq.status]}`}
                       >
                         {inq.status.charAt(0).toUpperCase() + inq.status.slice(1)}
                       </span>
                     </td>
-                    <td className="hidden sm:table-cell px-3 md:px-6 py-2 md:py-3.5 text-xs md:text-sm text-slate-500">
+                    <td className="px-6 py-3.5 text-sm text-slate-500">
                       {new Date(inq.createdAt).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'short',
@@ -208,8 +211,66 @@ export function DashboardPage() {
               </tbody>
             </table>
           </div>
+
+          {/* Mobile Cards View */}
+          <div className="md:hidden divide-y divide-slate-100">
+            {recentInquiries.map((inq) => (
+              <div key={inq._id} className="p-4 hover:bg-slate-50 transition-colors">
+                <div className="grid grid-cols-[1fr_1fr_auto] gap-3 items-start">
+                  {/* Left Column */}
+                  <div className="flex flex-col space-y-1.5 overflow-hidden">
+                    <span className="text-sm font-semibold text-slate-800 truncate">{inq.name}</span>
+                    <a href={`mailto:${inq.email}`} className="text-xs text-blue-600 truncate">{inq.email}</a>
+                    <span className="text-xs text-slate-600 truncate">{inq.phone || '—'}</span>
+                  </div>
+                  
+                  {/* Middle Column */}
+                  <div className="flex flex-col space-y-1.5 overflow-hidden">
+                    <button 
+                      onClick={() => setSelectedMessage(inq.message)}
+                      className="text-xs text-slate-700 text-left truncate italic hover:text-blue-600 bg-slate-100 rounded px-2 py-1"
+                    >
+                      {inq.message}
+                    </button>
+                    <span className="text-[10px] text-slate-500">
+                      {new Date(inq.createdAt).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    </span>
+                    <div>
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium ${badgeStyles[inq.status]}`}>
+                        {inq.status.charAt(0).toUpperCase() + inq.status.slice(1)}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {/* Right Column - Action */}
+                  <div className="flex flex-col items-end justify-center h-full">
+                    {/* No delete action on Dashboard, just a placeholder or icon to view */}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          </>
         )}
       </div>
+
+      {/* Message Modal */}
+      {selectedMessage && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50" onClick={() => setSelectedMessage(null)}>
+          <div className="bg-white rounded-xl shadow-lg max-w-md w-full p-6" onClick={e => e.stopPropagation()}>
+            <h3 className="text-lg font-bold text-slate-800 mb-3">Message</h3>
+            <div className="text-slate-600 text-sm whitespace-pre-wrap max-h-[60vh] overflow-y-auto p-3 bg-slate-50 rounded-lg border border-slate-100">
+              {selectedMessage}
+            </div>
+            <button 
+              onClick={() => setSelectedMessage(null)}
+              className="mt-4 w-full bg-slate-800 hover:bg-slate-900 text-white font-medium py-2.5 rounded-lg transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
