@@ -106,13 +106,13 @@ export function ServicesPage() {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-4 md:mb-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
             <Wrench className="w-5 h-5 text-blue-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-800">Main Services</h1>
+            <h1 className="text-xl md:text-2xl font-bold text-slate-800">Main Services</h1>
             <p className="text-sm text-slate-500">Manage the primary services shown on the frontend.</p>
           </div>
         </div>
@@ -129,7 +129,7 @@ export function ServicesPage() {
 
       {/* Inline add form */}
       {showForm && (
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 mb-6">
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 md:p-6 mb-4 md:mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-slate-800">Add New Service</h2>
             <button
@@ -207,12 +207,12 @@ export function ServicesPage() {
 
       {/* Services grid */}
       {services.length === 0 ? (
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm px-6 py-12 text-center">
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm px-6 py-8 md:py-12 text-center">
           <Wrench className="w-10 h-10 text-slate-300 mx-auto mb-3" />
           <p className="text-slate-500">No services yet. Add your first service.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:p-5">
           {services.map((service) => (
             <div
               key={service._id}
@@ -237,7 +237,7 @@ export function ServicesPage() {
               )}
 
               {/* Content */}
-              <div className="p-5">
+              <div className="p-4 sm:p-5">
                 <h3 className="text-base font-semibold text-slate-800 mb-2">
                   {service.title}
                 </h3>

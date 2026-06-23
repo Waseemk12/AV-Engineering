@@ -118,13 +118,13 @@ export function InquiriesPage() {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-4 md:mb-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
             <MessageSquare className="w-5 h-5 text-blue-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-800">Inquiries</h1>
+            <h1 className="text-xl md:text-2xl font-bold text-slate-800">Inquiries</h1>
             <p className="text-sm text-slate-500">
               {inquiries.length} total {inquiries.length === 1 ? 'inquiry' : 'inquiries'}
             </p>
@@ -133,7 +133,7 @@ export function InquiriesPage() {
       </div>
 
       {/* Filter tabs */}
-      <div className="flex gap-1 mb-6 bg-slate-100 p-1 rounded-lg w-fit">
+      <div className="flex gap-1 mb-4 md:mb-6 bg-slate-100 p-1 rounded-lg w-full md:w-fit overflow-x-auto hide-scrollbar">
         {tabConfig.map((tab) => {
           const count =
             tab.key === 'all'
@@ -159,7 +159,7 @@ export function InquiriesPage() {
       {/* Table */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         {filtered.length === 0 ? (
-          <div className="px-6 py-12 text-center text-slate-400">
+          <div className="px-6 py-8 md:py-12 text-center text-slate-400">
             No inquiries found
           </div>
         ) : (

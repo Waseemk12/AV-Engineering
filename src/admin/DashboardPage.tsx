@@ -124,15 +124,15 @@ export function DashboardPage() {
   return (
     <div>
       {/* Page header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-slate-800">Dashboard</h1>
+      <div className="mb-4 md:mb-6 md:mb-8">
+        <h1 className="text-xl md:text-2xl font-bold text-slate-800">Dashboard</h1>
         <p className="text-sm text-slate-500 mt-1">
           Overview of your business inquiries
         </p>
       </div>
 
       {/* Stats cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:p-5 mb-4 md:mb-6 md:mb-8">
         {(Object.keys(statusConfig) as Array<keyof typeof statusConfig>).map((key) => {
           const config = statusConfig[key];
           const style = cardStyles[config.color];
@@ -140,7 +140,7 @@ export function DashboardPage() {
           return (
             <div
               key={key}
-              className={`rounded-xl border p-5 ${style.bg} transition-shadow hover:shadow-md`}
+              className={`rounded-xl border p-4 sm:p-5 ${style.bg} transition-shadow hover:shadow-md`}
             >
               <div className="flex items-center justify-between mb-3">
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${style.iconBg}`}>
@@ -160,7 +160,7 @@ export function DashboardPage() {
           <h2 className="text-lg font-semibold text-slate-800">Recent Inquiries</h2>
         </div>
         {recentInquiries.length === 0 ? (
-          <div className="px-6 py-12 text-center text-slate-400">
+          <div className="px-6 py-8 md:py-12 text-center text-slate-400">
             No inquiries yet
           </div>
         ) : (

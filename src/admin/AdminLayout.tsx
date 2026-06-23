@@ -118,11 +118,15 @@ export function AdminLayout() {
           </ul>
         </nav>
 
-        <div className="p-4 border-t border-slate-200 space-y-2">
-          <a href="/" className="flex items-center px-3 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors">
-            ← Back to Site
-          </a>
-          <button onClick={handleLogout} className="flex items-center px-3 text-sm font-medium text-red-500 hover:text-red-700 transition-colors w-full text-left">
+        <div className="p-4 border-t border-slate-200">
+          <button 
+            onClick={() => {
+              if(window.confirm('Are you sure you want to logout?')) {
+                handleLogout(new MouseEvent('click') as any);
+              }
+            }} 
+            className="flex items-center justify-center w-full px-3 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-md hover:bg-red-100 transition-colors"
+          >
             Logout
           </button>
         </div>

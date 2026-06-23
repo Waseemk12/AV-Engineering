@@ -88,9 +88,9 @@ export function AllServicesPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-4 md:mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800">All Services (Capabilities)</h2>
+          <h2 className="text-xl md:text-2xl font-bold text-slate-800">All Services (Capabilities)</h2>
           <p className="text-slate-500">Manage comprehensive capabilities shown on the frontend.</p>
         </div>
         <button
@@ -103,7 +103,7 @@ export function AllServicesPage() {
       </div>
 
       {showAddForm && (
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200 mb-8">
+        <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm border border-slate-200 mb-4 md:mb-6 md:mb-8">
           <h3 className="text-lg font-bold text-slate-800 mb-4">Add New Capability</h3>
           <form onSubmit={handleAdd} className="flex flex-wrap items-end gap-4">
             <div className="w-full md:w-auto flex-1 min-w-[200px]">
@@ -148,16 +148,16 @@ export function AllServicesPage() {
       )}
 
       {services.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-lg border border-slate-200 text-slate-500">
+        <div className="text-center py-8 md:py-12 bg-white rounded-lg border border-slate-200 text-slate-500">
           No capabilities found. Add one above! Note: Fallback data is shown on the frontend until you add the first one here.
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:p-6">
           {CATEGORIES.map(cat => {
             const catServices = services.filter(s => s.category === cat);
             if (catServices.length === 0) return null;
             return (
-              <div key={cat} className="bg-white rounded-lg border border-slate-200 p-6 shadow-sm">
+              <div key={cat} className="bg-white rounded-lg border border-slate-200 p-4 md:p-6 shadow-sm">
                 <h3 className="text-lg font-bold text-slate-800 mb-4 pb-2 border-b border-slate-100">{cat}</h3>
                 <ul className="space-y-2">
                   {catServices.map(s => (

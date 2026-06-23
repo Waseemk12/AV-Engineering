@@ -3,16 +3,34 @@ import { Lock } from 'lucide-react';
 
 export function AdminLogin({ onLogin }: { onLogin: () => void }) {
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(false);
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === 'avengineers1141*') {
-      sessionStorage.setItem('admin_auth', 'true');
-      onLogin();
-    } else {
-      setError(true);
-      setPassword('');
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/auth`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        sessionStorage.setItem('admin_auth', 'true');
+        onLogin();
+      } else {
+        setError(data.error || 'Incorrect password');
+        setPassword('');
+      }
+    } catch (err) {
+      setError('Connection failed. Try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -32,18 +50,20 @@ export function AdminLogin({ onLogin }: { onLogin: () => void }) {
             <input
               type="password"
               value={password}
-              onChange={(e) => { setPassword(e.target.value); setError(false); }}
+              onChange={(e) => { setPassword(e.target.value); setError(''); }}
               placeholder="Password"
               className="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none"
               autoFocus
+              disabled={isLoading}
             />
-            {error && <p className="text-red-500 text-xs mt-2">Incorrect password</p>}
+            {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
           </div>
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
+            disabled={isLoading}
+            className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium rounded-md transition-colors"
           >
-            Access Admin
+            {isLoading ? 'Checking...' : 'Access Admin'}
           </button>
         </form>
       </div>

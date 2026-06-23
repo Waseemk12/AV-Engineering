@@ -1,4 +1,5 @@
 import express from 'express';
+import rateLimit from 'express-rate-limit';
 import dbConnect from './lib/mongodb.js';
 import Inquiry from './lib/models/Inquiry.js';
 import Service from './lib/models/Service.js';
@@ -26,6 +27,26 @@ app.use(async (req, res, next) => {
     next();
   } catch (error) {
     res.status(500).json({ error: 'Database connection failed' });
+  }
+});
+
+// --- Auth ---
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // Limit each IP to 5 requests per `window`
+  message: { error: 'Too many login attempts, please try again after 15 minutes' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.post('/api/auth', loginLimiter, (req, res) => {
+  const { password } = req.body;
+  const adminPassword = process.env.ADMIN_PASSWORD || 'avengineers1141*';
+  
+  if (password === adminPassword) {
+    res.json({ success: true, token: 'admin_authenticated' });
+  } else {
+    res.status(401).json({ error: 'Invalid password' });
   }
 });
 
@@ -109,6 +130,7 @@ app.get('/api/seed', async (req, res) => {
   await Inquiry.deleteMany({});
   await Service.deleteMany({});
   await Project.deleteMany({});
+  await DetailedService.deleteMany({});
   
   // Seed basic services
   const services = [
@@ -119,6 +141,37 @@ app.get('/api/seed', async (req, res) => {
     { title: 'AMC Services', description: "To ensure your system is up to date when it's required.", image: '/amc-services.jpg', displayOrder: 5 }
   ];
   await Service.insertMany(services);
+
+  // Seed detailed services
+  const detailedServices = [
+    { category: "Fire Protection System", name: "Water-Based System", icon: "Droplet" },
+    { category: "Fire Protection System", name: "Hydrant System", icon: "Droplet" },
+    { category: "Fire Protection System", name: "Sprinkles System", icon: "Droplet" },
+    { category: "Fire Protection System", name: "MVWS & HVWS System", icon: "Settings" },
+    { category: "Fire Protection System", name: "Foam System", icon: "Droplet" },
+    { category: "Fire Protection System", name: "Gas Suppression System", icon: "Wind" },
+    { category: "Fire Protection System", name: "Co2/FM-200/Inergen", icon: "Wind" },
+    { category: "Fire Protection System", name: "Fire Detection & Alarm", icon: "Bell" },
+    
+    { category: "Security System", name: "Access Control System", icon: "Lock" },
+    { category: "Security System", name: "Video Surveillance System", icon: "Video" },
+    { category: "Security System", name: "Intrusion Alarm System", icon: "Bell" },
+    { category: "Security System", name: "Perimeter Protection", icon: "Shield" },
+    { category: "Security System", name: "Public Address System", icon: "Speaker" },
+    
+    { category: "Process & Utility Piping System", name: "Compressed Air Piping", icon: "Wind" },
+    { category: "Process & Utility Piping System", name: "IBR Steam Piping", icon: "Thermometer" },
+    { category: "Process & Utility Piping System", name: "Fuel Transfer System", icon: "Factory" },
+    { category: "Process & Utility Piping System", name: "Chilled Water Piping", icon: "Droplet" },
+    { category: "Process & Utility Piping System", name: "Sewage Transfer System", icon: "Droplet" },
+    { category: "Process & Utility Piping System", name: "Hot & Cold Acoustic Insulation", icon: "Thermometer" },
+    { category: "Process & Utility Piping System", name: "Falls ceiling Insulation", icon: "HardHat" },
+    
+    { category: "Heavy Engineering Fabrication", name: "Pipe Rack & Super Structures", icon: "HardHat" },
+    { category: "Heavy Engineering Fabrication", name: "Tank & Vessel Manufacturing", icon: "Factory" },
+    { category: "Heavy Engineering Fabrication", name: "Tower & Chimney Manufacturing", icon: "Factory" }
+  ];
+  await DetailedService.insertMany(detailedServices);
 
   res.json({ message: 'Seeded successfully' });
 });
