@@ -1,42 +1,64 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-const services = [
-{
-  id: '01',
-  title: 'Fire alarm and Detection System',
-  description:
-  'Designed to detect one or more of the three characteristics of fire- smoke, heat and flame.',
-  image: "/fire-alarm.jpg"
-},
-{
-  id: '02',
-  title: 'Containerized Fire Pump System',
-  description:
-  'Constructed inside a standard shipping container, the units are easy to ship and install.',
-  image: "/containerized.jpg"
-},
-{
-  id: '03',
-  title: 'Fire Hydrant & Sprinkler Systems',
-  description:
-  'Fire hydrants and Sprinklers are an active fire protection measure.',
-  image: "/fire-hydrant.jpg"
-},
-{
-  id: '05',
-  title: 'Fire Suppression System',
-  description:
-  'Engineered group of units that are built to extinguish fires through the application of a substance.',
-  image: "/fire-suppression.jpg"
-},
-{
-  id: '06',
-  title: 'AMC Services',
-  description: "To ensure your system is up to date when it's required.",
-  image: "/amc-services.jpg"
-}];
+const API = import.meta.env.VITE_API_URL || '';
+
+interface ServiceItem {
+  _id?: string;
+  id?: string;
+  title: string;
+  description: string;
+  image: string;
+}
+
+const fallbackServices: ServiceItem[] = [
+  {
+    id: '01',
+    title: 'Fire alarm and Detection System',
+    description: 'Designed to detect one or more of the three characteristics of fire- smoke, heat and flame.',
+    image: "/fire-alarm.jpg"
+  },
+  {
+    id: '02',
+    title: 'Containerized Fire Pump System',
+    description: 'Constructed inside a standard shipping container, the units are easy to ship and install.',
+    image: "/containerized.jpg"
+  },
+  {
+    id: '03',
+    title: 'Fire Hydrant & Sprinkler Systems',
+    description: 'Fire hydrants and Sprinklers are an active fire protection measure.',
+    image: "/fire-hydrant.jpg"
+  },
+  {
+    id: '05',
+    title: 'Fire Suppression System',
+    description: 'Engineered group of units that are built to extinguish fires through the application of a substance.',
+    image: "/fire-suppression.jpg"
+  },
+  {
+    id: '06',
+    title: 'AMC Services',
+    description: "To ensure your system is up to date when it's required.",
+    image: "/amc-services.jpg"
+  }
+];
 
 export function Services() {
+  const [services, setServices] = useState<ServiceItem[]>(fallbackServices);
+
+  useEffect(() => {
+    fetch(`${API}/api/services`)
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setServices(data);
+        }
+      })
+      .catch(() => {
+        // Use fallback data
+      });
+  }, []);
+
   return (
     <section id="services" className="py-16 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -47,7 +69,7 @@ export function Services() {
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {services.map((service, index) =>
           <div
-            key={index}
+            key={service._id || service.id || index}
             className="bg-white rounded-md border border-slate-200 overflow-hidden flex flex-col">
             
               <div className="h-40 bg-slate-100 overflow-hidden">
@@ -67,7 +89,7 @@ export function Services() {
                 </p>
                 <div>
                   <a
-                  href={`#service-${service.id}`}
+                  href={`#service-${service._id || service.id}`}
                   className="inline-block px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-md transition-colors">
                   
                     Learn more

@@ -1,13 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapPin, Activity, CheckCircle2 } from 'lucide-react';
 
-const runningProjects = [
+const API = import.meta.env.VITE_API_URL || '';
+
+interface ProjectItem {
+  _id?: string;
+  name: string;
+  location: string;
+  status: 'ongoing' | 'completed';
+}
+
+const fallbackRunning = [
   { name: "Logos logistics Park", location: "Chakhan" },
   { name: "Igcl", location: "Vapi" },
   { name: "Kirloskar", location: "Sholapur" },
 ];
 
-const completedProjects = [
+const fallbackCompleted = [
   "Nagpur police housing",
   "Logos logistics Park, Chennai",
   "Weg India, Hosur",
@@ -27,6 +36,29 @@ const completedProjects = [
 ];
 
 export function Projects() {
+  const [runningProjects, setRunningProjects] = useState(fallbackRunning);
+  const [completedProjects, setCompletedProjects] = useState(fallbackCompleted);
+
+  useEffect(() => {
+    fetch(`${API}/api/projects`)
+      .then(res => res.json())
+      .then((data: ProjectItem[]) => {
+        if (Array.isArray(data) && data.length > 0) {
+          const ongoing = data
+            .filter(p => p.status === 'ongoing')
+            .map(p => ({ name: p.name, location: p.location }));
+          const completed = data
+            .filter(p => p.status === 'completed')
+            .map(p => `${p.name}, ${p.location}`);
+          if (ongoing.length > 0) setRunningProjects(ongoing);
+          if (completed.length > 0) setCompletedProjects(completed);
+        }
+      })
+      .catch(() => {
+        // Use fallback data
+      });
+  }, []);
+
   return (
     <section className="py-24 bg-white border-t border-slate-200 overflow-hidden relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
