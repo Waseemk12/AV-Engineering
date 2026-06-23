@@ -132,7 +132,7 @@ export function DashboardPage() {
       </div>
 
       {/* Stats cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:p-5 mb-4 md:mb-6 md:mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-5 mb-6 md:mb-8">
         {(Object.keys(statusConfig) as Array<keyof typeof statusConfig>).map((key) => {
           const config = statusConfig[key];
           const style = cardStyles[config.color];
@@ -140,15 +140,15 @@ export function DashboardPage() {
           return (
             <div
               key={key}
-              className={`rounded-xl border p-4 sm:p-5 ${style.bg} transition-shadow hover:shadow-md`}
+              className={`rounded-xl border p-3 sm:p-4 transition-shadow hover:shadow-md ${style.bg}`}
             >
-              <div className="flex items-center justify-between mb-3">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${style.iconBg}`}>
+              <div className="flex items-center justify-between mb-2 md:mb-3">
+                <div className={`w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center ${style.iconBg}`}>
                   <Icon className="w-5 h-5" />
                 </div>
               </div>
-              <p className={`text-3xl font-bold ${style.count}`}>{counts[key]}</p>
-              <p className={`text-sm font-medium mt-1 ${style.text}`}>{config.label}</p>
+              <p className={`text-xl sm:text-2xl md:text-3xl font-bold ${style.count}`}>{counts[key]}</p>
+              <p className={`text-xs md:text-sm font-medium mt-1 ${style.text}`}>{config.label}</p>
             </div>
           );
         })}
@@ -168,16 +168,16 @@ export function DashboardPage() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-slate-100">
-                  <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wider px-6 py-3">
+                  <th className="text-left text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 md:px-6 py-2 md:py-3">
                     Name
                   </th>
-                  <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wider px-6 py-3">
+                  <th className="hidden sm:table-cell text-left text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 md:px-6 py-2 md:py-3">
                     Email
                   </th>
-                  <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wider px-6 py-3">
+                  <th className="text-left text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 md:px-6 py-2 md:py-3">
                     Status
                   </th>
-                  <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wider px-6 py-3">
+                  <th className="hidden sm:table-cell text-left text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 md:px-6 py-2 md:py-3">
                     Date
                   </th>
                 </tr>
@@ -185,18 +185,18 @@ export function DashboardPage() {
               <tbody className="divide-y divide-slate-100">
                 {recentInquiries.map((inq) => (
                   <tr key={inq._id} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-6 py-3.5 text-sm font-medium text-slate-800">
+                    <td className="px-3 md:px-6 py-2 md:py-3.5 text-xs md:text-sm font-medium text-slate-800 break-words max-w-[120px]">
                       {inq.name}
                     </td>
-                    <td className="px-6 py-3.5 text-sm text-slate-600">{inq.email}</td>
-                    <td className="px-6 py-3.5">
+                    <td className="hidden sm:table-cell px-3 md:px-6 py-2 md:py-3.5 text-xs md:text-sm text-slate-600 truncate max-w-[150px]">{inq.email}</td>
+                    <td className="px-3 md:px-6 py-2 md:py-3.5">
                       <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${badgeStyles[inq.status]}`}
+                        className={`inline-flex items-center px-2 md:px-2.5 py-0.5 rounded-full text-[10px] md:text-xs font-medium ${badgeStyles[inq.status]}`}
                       >
                         {inq.status.charAt(0).toUpperCase() + inq.status.slice(1)}
                       </span>
                     </td>
-                    <td className="px-6 py-3.5 text-sm text-slate-500">
+                    <td className="hidden sm:table-cell px-3 md:px-6 py-2 md:py-3.5 text-xs md:text-sm text-slate-500">
                       {new Date(inq.createdAt).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'short',

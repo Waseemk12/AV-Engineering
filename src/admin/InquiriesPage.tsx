@@ -167,25 +167,25 @@ export function InquiriesPage() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50/50">
-                  <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wider px-6 py-3">
+                  <th className="text-left text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 md:px-6 py-2 md:py-3">
                     Name
                   </th>
-                  <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wider px-6 py-3">
+                  <th className="hidden sm:table-cell text-left text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 md:px-6 py-2 md:py-3">
                     Email
                   </th>
-                  <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wider px-6 py-3">
+                  <th className="hidden lg:table-cell text-left text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 md:px-6 py-2 md:py-3">
                     Phone
                   </th>
-                  <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wider px-6 py-3 max-w-[200px]">
+                  <th className="hidden md:table-cell text-left text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 md:px-6 py-2 md:py-3 max-w-[200px]">
                     Message
                   </th>
-                  <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wider px-6 py-3">
+                  <th className="text-left text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 md:px-6 py-2 md:py-3">
                     Status
                   </th>
-                  <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wider px-6 py-3">
+                  <th className="hidden sm:table-cell text-left text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 md:px-6 py-2 md:py-3">
                     Date
                   </th>
-                  <th className="text-right text-xs font-semibold text-slate-500 uppercase tracking-wider px-6 py-3">
+                  <th className="text-right text-[10px] md:text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 md:px-6 py-2 md:py-3">
                     Actions
                   </th>
                 </tr>
@@ -193,25 +193,25 @@ export function InquiriesPage() {
               <tbody className="divide-y divide-slate-100">
                 {filtered.map((inq) => (
                   <tr key={inq._id} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-6 py-3.5 text-sm font-medium text-slate-800 whitespace-nowrap">
+                    <td className="px-3 md:px-6 py-2 md:py-3.5 text-xs md:text-sm font-medium text-slate-800 break-words max-w-[120px]">
                       {inq.name}
                     </td>
-                    <td className="px-6 py-3.5 text-sm text-slate-600 whitespace-nowrap">
+                    <td className="hidden sm:table-cell px-3 md:px-6 py-2 md:py-3.5 text-xs md:text-sm text-slate-600 truncate max-w-[150px]">
                       {inq.email}
                     </td>
-                    <td className="px-6 py-3.5 text-sm text-slate-600 whitespace-nowrap">
+                    <td className="hidden lg:table-cell px-3 md:px-6 py-2 md:py-3.5 text-xs md:text-sm text-slate-600 whitespace-nowrap">
                       {inq.phone || '—'}
                     </td>
-                    <td className="px-6 py-3.5 text-sm text-slate-600 max-w-[200px]">
+                    <td className="hidden md:table-cell px-3 md:px-6 py-2 md:py-3.5 text-xs md:text-sm text-slate-600 max-w-[200px]">
                       <span className="block truncate" title={inq.message}>
                         {inq.message}
                       </span>
                     </td>
-                    <td className="px-6 py-3.5">
+                    <td className="px-3 md:px-6 py-2 md:py-3.5">
                       <select
                         value={inq.status}
                         onChange={(e) => handleStatusChange(inq._id, e.target.value)}
-                        className={`text-xs font-medium rounded-full px-3 py-1 border cursor-pointer appearance-none text-center ${badgeStyles[inq.status]}`}
+                        className={`text-[10px] md:text-xs font-medium rounded-full px-2 md:px-3 py-1 border cursor-pointer appearance-none text-center ${badgeStyles[inq.status]}`}
                       >
                         <option value="new">New</option>
                         <option value="contacted">Contacted</option>
@@ -219,17 +219,17 @@ export function InquiriesPage() {
                         <option value="rejected">Rejected</option>
                       </select>
                     </td>
-                    <td className="px-6 py-3.5 text-sm text-slate-500 whitespace-nowrap">
+                    <td className="hidden sm:table-cell px-3 md:px-6 py-2 md:py-3.5 text-xs md:text-sm text-slate-500 whitespace-nowrap">
                       {new Date(inq.createdAt).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'short',
                         day: 'numeric',
                       })}
                     </td>
-                    <td className="px-6 py-3.5 text-right">
+                    <td className="px-3 md:px-6 py-2 md:py-3.5 text-right">
                       <button
                         onClick={() => handleDelete(inq._id)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                        className="p-1 md:p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
                         title="Delete inquiry"
                       >
                         <Trash2 className="w-4 h-4" />
