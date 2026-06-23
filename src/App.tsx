@@ -18,6 +18,7 @@ import { InquiriesPage } from './admin/InquiriesPage';
 import { ServicesPage } from './admin/ServicesPage';
 import { AllServicesPage } from './admin/AllServicesPage';
 import { ProjectsPage } from './admin/ProjectsPage';
+import { RecentlyDeletedPage } from './admin/RecentlyDeletedPage';
 
 function PublicSite() {
   useScreenInit();
@@ -50,6 +51,7 @@ export function App() {
         <Route path="services" element={<ServicesPage />} />
         <Route path="all-services" element={<AllServicesPage />} />
         <Route path="projects" element={<ProjectsPage />} />
+        <Route path="recently-deleted" element={<RecentlyDeletedPage />} />
       </Route>
     </Routes>
   );

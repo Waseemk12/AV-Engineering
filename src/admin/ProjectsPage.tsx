@@ -12,6 +12,7 @@ import {
   Clock,
   CheckCircle2,
 } from 'lucide-react';
+import { ConfirmModal } from './ConfirmModal';
 
 const API = import.meta.env.VITE_API_URL || '';
 
@@ -34,6 +35,8 @@ export function ProjectsPage() {
     status: 'ongoing' as 'ongoing' | 'completed',
   });
   const [submitting, setSubmitting] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
 
   const fetchProjects = async () => {
     setLoading(true);
@@ -90,10 +93,15 @@ export function ProjectsPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this project?')) return;
+  const handleDeleteClick = (id: string) => {
+    setItemToDelete(id);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!itemToDelete) return;
     try {
-      const res = await fetch(`${API}/api/projects/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API}/api/projects/${itemToDelete}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete project');
       await fetchProjects();
     } catch (err: any) {
@@ -163,7 +171,7 @@ export function ProjectsPage() {
           {project.status === 'ongoing' ? 'Mark Completed' : 'Mark Ongoing'}
         </button>
         <button
-          onClick={() => handleDelete(project._id)}
+          onClick={() => handleDeleteClick(project._id)}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors ml-auto"
         >
           <Trash2 className="w-4 h-4" />
@@ -334,6 +342,17 @@ export function ProjectsPage() {
           </section>
         </div>
       )}
+      <ConfirmModal
+        isOpen={isDeleteModalOpen}
+        title="Delete Project"
+        message="Are you sure you want to delete this project? It will be moved to Recently Deleted."
+        confirmText="Delete"
+        onConfirm={confirmDelete}
+        onCancel={() => {
+          setIsDeleteModalOpen(false);
+          setItemToDelete(null);
+        }}
+      />
     </div>
   );
 }

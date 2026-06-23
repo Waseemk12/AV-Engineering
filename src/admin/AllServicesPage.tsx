@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Loader2, AlertCircle, Plus, Trash2 } from 'lucide-react';
+import { ConfirmModal } from './ConfirmModal';
 
 const API = import.meta.env.VITE_API_URL || '';
 
@@ -28,6 +29,8 @@ export function AllServicesPage() {
   const [newCategory, setNewCategory] = useState(CATEGORIES[0]);
   const [newName, setNewName] = useState('');
   const [newIcon, setNewIcon] = useState('Activity');
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
 
   const fetchServices = async () => {
     setIsLoading(true);
@@ -65,10 +68,15 @@ export function AllServicesPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this capability?')) return;
+  const handleDeleteClick = (id: string) => {
+    setItemToDelete(id);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!itemToDelete) return;
     try {
-      const res = await fetch(`${API}/api/detailed-services/${id}`, {
+      const res = await fetch(`${API}/api/detailed-services/${itemToDelete}`, {
         method: 'DELETE',
       });
       if (!res.ok) throw new Error('Failed to delete');
@@ -166,7 +174,7 @@ export function AllServicesPage() {
                         <span className="bg-slate-200 text-xs px-2 py-1 rounded mr-2 font-medium">{s.icon}</span>
                         {s.name}
                       </div>
-                      <button onClick={() => handleDelete(s._id)} className="text-red-500 hover:text-red-700 p-1">
+                      <button onClick={() => handleDeleteClick(s._id)} className="text-red-500 hover:text-red-700 p-1">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </li>
@@ -177,6 +185,17 @@ export function AllServicesPage() {
           })}
         </div>
       )}
+      <ConfirmModal
+        isOpen={isDeleteModalOpen}
+        title="Delete Capability"
+        message="Are you sure you want to delete this capability? It will be moved to Recently Deleted."
+        confirmText="Delete"
+        onConfirm={confirmDelete}
+        onCancel={() => {
+          setIsDeleteModalOpen(false);
+          setItemToDelete(null);
+        }}
+      />
     </div>
   );
 }

@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, MessageSquare, Wrench, FolderKanban, ListTree, Menu, X } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, Wrench, FolderKanban, ListTree, Menu, X, Trash2 } from 'lucide-react';
 import { AdminLogin } from './AdminLogin';
+
+import { ConfirmModal } from './ConfirmModal';
 
 export function AdminLayout() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,8 +17,7 @@ export function AdminLayout() {
     }
   }, []);
 
-  const handleLogout = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const handleLogout = () => {
     sessionStorage.removeItem('admin_auth');
     setIsAuthenticated(false);
     navigate('/');
@@ -78,6 +80,16 @@ export function AdminLayout() {
           Projects
         </NavLink>
       </li>
+      <li>
+        <NavLink 
+          to="/admin/recently-deleted" 
+          onClick={() => setIsMobileMenuOpen(false)}
+          className={({ isActive }) => `flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}
+        >
+          <Trash2 className="w-5 h-5 mr-3" />
+          Recently Deleted
+        </NavLink>
+      </li>
     </>
   );
 
@@ -120,11 +132,7 @@ export function AdminLayout() {
 
         <div className="p-4 border-t border-slate-200">
           <button 
-            onClick={() => {
-              if(window.confirm('Are you sure you want to logout?')) {
-                handleLogout(new MouseEvent('click') as any);
-              }
-            }} 
+            onClick={() => setIsLogoutModalOpen(true)}
             className="flex items-center justify-center w-full px-3 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-md hover:bg-red-100 transition-colors"
           >
             Logout
@@ -138,6 +146,15 @@ export function AdminLayout() {
           <Outlet />
         </div>
       </main>
+
+      <ConfirmModal
+        isOpen={isLogoutModalOpen}
+        title="Logout"
+        message="Are you sure you want to logout from the admin panel?"
+        confirmText="Logout"
+        onConfirm={handleLogout}
+        onCancel={() => setIsLogoutModalOpen(false)}
+      />
     </div>
   );
 }

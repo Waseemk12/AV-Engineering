@@ -5,6 +5,7 @@ import Inquiry from './lib/models/Inquiry.js';
 import Service from './lib/models/Service.js';
 import DetailedService from './lib/models/DetailedService.js';
 import Project from './lib/models/Project.js';
+import DeletedItem from './lib/models/DeletedItem.js';
 
 const app = express();
 app.set('trust proxy', 1);
@@ -77,7 +78,11 @@ app.patch('/api/inquiries/:id', async (req, res) => {
 });
 
 app.delete('/api/inquiries/:id', async (req, res) => {
-  await Inquiry.findByIdAndDelete(req.params.id);
+  const doc = await Inquiry.findById(req.params.id);
+  if (doc) {
+    await DeletedItem.create({ originalId: doc._id.toString(), collectionName: 'Inquiry', data: doc.toObject() });
+    await Inquiry.findByIdAndDelete(req.params.id);
+  }
   res.json({ message: 'Deleted' });
 });
 
@@ -93,7 +98,11 @@ app.post('/api/services', async (req, res) => {
 });
 
 app.delete('/api/services/:id', async (req, res) => {
-  await Service.findByIdAndDelete(req.params.id);
+  const doc = await Service.findById(req.params.id);
+  if (doc) {
+    await DeletedItem.create({ originalId: doc._id.toString(), collectionName: 'Service', data: doc.toObject() });
+    await Service.findByIdAndDelete(req.params.id);
+  }
   res.json({ message: 'Deleted' });
 });
 
@@ -109,7 +118,11 @@ app.post('/api/detailed-services', async (req, res) => {
 });
 
 app.delete('/api/detailed-services/:id', async (req, res) => {
-  await DetailedService.findByIdAndDelete(req.params.id);
+  const doc = await DetailedService.findById(req.params.id);
+  if (doc) {
+    await DeletedItem.create({ originalId: doc._id.toString(), collectionName: 'DetailedService', data: doc.toObject() });
+    await DetailedService.findByIdAndDelete(req.params.id);
+  }
   res.json({ message: 'Deleted' });
 });
 
@@ -130,8 +143,40 @@ app.patch('/api/projects/:id', async (req, res) => {
 });
 
 app.delete('/api/projects/:id', async (req, res) => {
-  await Project.findByIdAndDelete(req.params.id);
+  const doc = await Project.findById(req.params.id);
+  if (doc) {
+    await DeletedItem.create({ originalId: doc._id.toString(), collectionName: 'Project', data: doc.toObject() });
+    await Project.findByIdAndDelete(req.params.id);
+  }
   res.json({ message: 'Deleted' });
+});
+
+// --- Recently Deleted ---
+app.get('/api/deleted', async (req, res) => {
+  const items = await DeletedItem.find({}).sort({ deletedAt: -1 });
+  res.json(items);
+});
+
+app.post('/api/deleted/:id/restore', async (req, res) => {
+  const item = await DeletedItem.findById(req.params.id);
+  if (!item) return res.status(404).json({ error: 'Item not found' });
+  
+  // Re-insert into original collection
+  const data = item.data;
+  delete data._id; // Let mongoose assign the same ID or a new one? Better keep the same ID.
+  // Actually, we can use the original ID.
+  const models = { Inquiry, Service, DetailedService, Project };
+  const Model = models[item.collectionName];
+  if (!Model) return res.status(400).json({ error: 'Unknown collection' });
+
+  await Model.create({ _id: item.originalId, ...data });
+  await DeletedItem.findByIdAndDelete(req.params.id);
+  res.json({ message: 'Restored' });
+});
+
+app.delete('/api/deleted/:id', async (req, res) => {
+  await DeletedItem.findByIdAndDelete(req.params.id);
+  res.json({ message: 'Permanently Deleted' });
 });
 
 // --- Seed ---

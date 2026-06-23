@@ -9,6 +9,7 @@ import {
   RefreshCw,
   ImageOff,
 } from 'lucide-react';
+import { ConfirmModal } from './ConfirmModal';
 
 const API = import.meta.env.VITE_API_URL || '';
 
@@ -27,6 +28,8 @@ export function ServicesPage() {
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ title: '', description: '', image: '' });
   const [submitting, setSubmitting] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
 
   const fetchServices = async () => {
     setLoading(true);
@@ -68,10 +71,15 @@ export function ServicesPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this service?')) return;
+  const handleDeleteClick = (id: string) => {
+    setItemToDelete(id);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!itemToDelete) return;
     try {
-      const res = await fetch(`${API}/api/services/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API}/api/services/${itemToDelete}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete service');
       await fetchServices();
     } catch (err: any) {
@@ -249,7 +257,7 @@ export function ServicesPage() {
               {/* Footer */}
               <div className="px-5 py-3 border-t border-slate-100 flex justify-end">
                 <button
-                  onClick={() => handleDelete(service._id)}
+                  onClick={() => handleDeleteClick(service._id)}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -260,6 +268,17 @@ export function ServicesPage() {
           ))}
         </div>
       )}
+      <ConfirmModal
+        isOpen={isDeleteModalOpen}
+        title="Delete Service"
+        message="Are you sure you want to delete this service? It will be moved to Recently Deleted."
+        confirmText="Delete"
+        onConfirm={confirmDelete}
+        onCancel={() => {
+          setIsDeleteModalOpen(false);
+          setItemToDelete(null);
+        }}
+      />
     </div>
   );
 }

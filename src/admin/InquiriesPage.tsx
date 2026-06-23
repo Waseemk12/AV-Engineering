@@ -6,6 +6,7 @@ import {
   AlertTriangle,
   RefreshCw,
 } from 'lucide-react';
+import { ConfirmModal } from './ConfirmModal';
 
 const API = import.meta.env.VITE_API_URL || '';
 
@@ -42,6 +43,8 @@ export function InquiriesPage() {
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<FilterTab>('all');
   const [selectedMessage, setSelectedMessage] = useState<string | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
 
   const fetchInquiries = async () => {
     setLoading(true);
@@ -76,10 +79,15 @@ export function InquiriesPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this inquiry?')) return;
+  const handleDeleteClick = (id: string) => {
+    setItemToDelete(id);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!itemToDelete) return;
     try {
-      const res = await fetch(`${API}/api/inquiries/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API}/api/inquiries/${itemToDelete}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete inquiry');
       await fetchInquiries();
     } catch (err: any) {
@@ -231,7 +239,7 @@ export function InquiriesPage() {
                     </td>
                     <td className="px-6 py-3.5 text-right">
                       <button
-                        onClick={() => handleDelete(inq._id)}
+                        onClick={() => handleDeleteClick(inq._id)}
                         className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
                         title="Delete inquiry"
                       >
@@ -284,7 +292,7 @@ export function InquiriesPage() {
                     {/* Right Column - Action */}
                     <div className="flex flex-col items-end justify-center h-full">
                       <button
-                        onClick={() => handleDelete(inq._id)}
+                        onClick={() => handleDeleteClick(inq._id)}
                         className="p-2 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -315,6 +323,18 @@ export function InquiriesPage() {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={isDeleteModalOpen}
+        title="Delete Inquiry"
+        message="Are you sure you want to delete this inquiry? It will be moved to Recently Deleted."
+        confirmText="Delete"
+        onConfirm={confirmDelete}
+        onCancel={() => {
+          setIsDeleteModalOpen(false);
+          setItemToDelete(null);
+        }}
+      />
     </div>
   );
 }
