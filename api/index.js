@@ -7,7 +7,17 @@ import DetailedService from './lib/models/DetailedService.js';
 import Project from './lib/models/Project.js';
 
 const app = express();
-app.use(express.json());
+app.set('trust proxy', 1);
+
+// Vercel parses the body automatically, but express.json() might overwrite it. 
+// We conditionally apply express.json() only if the body hasn't been parsed.
+app.use((req, res, next) => {
+  if (req.body && Object.keys(req.body).length > 0) {
+    next();
+  } else {
+    express.json()(req, res, next);
+  }
+});
 
 // Add CORS headers for all routes
 app.use((req, res, next) => {
