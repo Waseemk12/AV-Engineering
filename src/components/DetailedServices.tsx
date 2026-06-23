@@ -1,57 +1,100 @@
-import React, { useState } from 'react';
-import { Flame, Shield, Wrench, Settings, Droplet, Wind, Lock, Video, Bell, HardHat, Speaker, Thermometer, Factory } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Flame, Shield, Wrench, Settings, Droplet, Wind, Lock, Video, Bell, HardHat, Speaker, Thermometer, Factory, Activity } from 'lucide-react';
 
-const categories = [
-  {
-    title: "Fire Protection System",
-    icon: <Flame className="w-6 h-6 text-slate-700" />,
-    items: [
-      { name: "Water-Based System", icon: <Droplet className="w-4 h-4 mr-2 text-slate-400" /> },
-      { name: "Hydrant System", icon: <Droplet className="w-4 h-4 mr-2 text-slate-400" /> },
-      { name: "Sprinkles System", icon: <Droplet className="w-4 h-4 mr-2 text-slate-400" /> },
-      { name: "MVWS & HVWS System", icon: <Settings className="w-4 h-4 mr-2 text-slate-400" /> },
-      { name: "Foam System", icon: <Droplet className="w-4 h-4 mr-2 text-slate-400" /> },
-      { name: "Gas Suppression System", icon: <Wind className="w-4 h-4 mr-2 text-slate-400" /> },
-      { name: "Co2/FM-200/Inergen", icon: <Wind className="w-4 h-4 mr-2 text-slate-400" /> },
-      { name: "Fire Detection & Alarm", icon: <Bell className="w-4 h-4 mr-2 text-slate-400" /> },
-    ]
-  },
-  {
-    title: "Security System",
-    icon: <Shield className="w-6 h-6 text-slate-700" />,
-    items: [
-      { name: "Access Control System", icon: <Lock className="w-4 h-4 mr-2 text-slate-400" /> },
-      { name: "Video Surveillance System", icon: <Video className="w-4 h-4 mr-2 text-slate-400" /> },
-      { name: "Intrusion Alarm System", icon: <Bell className="w-4 h-4 mr-2 text-slate-400" /> },
-      { name: "Perimeter Protection", icon: <Shield className="w-4 h-4 mr-2 text-slate-400" /> },
-      { name: "Public Address System", icon: <Speaker className="w-4 h-4 mr-2 text-slate-400" /> },
-    ]
-  },
-  {
-    title: "Process & Utility Piping System",
-    icon: <Settings className="w-6 h-6 text-slate-700" />,
-    items: [
-      { name: "Compressed Air Piping", icon: <Wind className="w-4 h-4 mr-2 text-slate-400" /> },
-      { name: "IBR Steam Piping", icon: <Thermometer className="w-4 h-4 mr-2 text-slate-400" /> },
-      { name: "Fuel Transfer System", icon: <Factory className="w-4 h-4 mr-2 text-slate-400" /> },
-      { name: "Chilled Water Piping", icon: <Droplet className="w-4 h-4 mr-2 text-slate-400" /> },
-      { name: "Sewage Transfer System", icon: <Droplet className="w-4 h-4 mr-2 text-slate-400" /> },
-      { name: "Hot & Cold Acoustic Insulation", icon: <Thermometer className="w-4 h-4 mr-2 text-slate-400" /> },
-      { name: "Falls ceiling Insulation", icon: <HardHat className="w-4 h-4 mr-2 text-slate-400" /> },
-    ]
-  },
-  {
-    title: "Heavy Engineering Fabrication",
-    icon: <Wrench className="w-6 h-6 text-slate-700" />,
-    items: [
-      { name: "Pipe Rack & Super Structures", icon: <HardHat className="w-4 h-4 mr-2 text-slate-400" /> },
-      { name: "Tank & Vessel Manufacturing", icon: <Factory className="w-4 h-4 mr-2 text-slate-400" /> },
-      { name: "Tower & Chimney Manufacturing", icon: <Factory className="w-4 h-4 mr-2 text-slate-400" /> },
-    ]
-  }
+const API = import.meta.env.VITE_API_URL || '';
+
+// Map icon strings to lucide-react components
+const iconMap: Record<string, React.ReactNode> = {
+  Flame: <Flame className="w-6 h-6 text-slate-700" />,
+  Shield: <Shield className="w-6 h-6 text-slate-700" />,
+  Wrench: <Wrench className="w-6 h-6 text-slate-700" />,
+  Settings: <Settings className="w-6 h-6 text-slate-700" />,
+  Droplet: <Droplet className="w-4 h-4 mr-2 text-slate-400" />,
+  Wind: <Wind className="w-4 h-4 mr-2 text-slate-400" />,
+  Lock: <Lock className="w-4 h-4 mr-2 text-slate-400" />,
+  Video: <Video className="w-4 h-4 mr-2 text-slate-400" />,
+  Bell: <Bell className="w-4 h-4 mr-2 text-slate-400" />,
+  HardHat: <HardHat className="w-4 h-4 mr-2 text-slate-400" />,
+  Speaker: <Speaker className="w-4 h-4 mr-2 text-slate-400" />,
+  Thermometer: <Thermometer className="w-4 h-4 mr-2 text-slate-400" />,
+  Factory: <Factory className="w-4 h-4 mr-2 text-slate-400" />,
+  Activity: <Activity className="w-4 h-4 mr-2 text-slate-400" />
+};
+
+interface DetailedServiceItem {
+  _id?: string;
+  category: string;
+  name: string;
+  icon: string;
+}
+
+const fallbackItems: DetailedServiceItem[] = [
+  { category: "Fire Protection System", name: "Water-Based System", icon: "Droplet" },
+  { category: "Fire Protection System", name: "Hydrant System", icon: "Droplet" },
+  { category: "Fire Protection System", name: "Sprinkles System", icon: "Droplet" },
+  { category: "Fire Protection System", name: "MVWS & HVWS System", icon: "Settings" },
+  { category: "Fire Protection System", name: "Foam System", icon: "Droplet" },
+  { category: "Fire Protection System", name: "Gas Suppression System", icon: "Wind" },
+  { category: "Fire Protection System", name: "Co2/FM-200/Inergen", icon: "Wind" },
+  { category: "Fire Protection System", name: "Fire Detection & Alarm", icon: "Bell" },
+  
+  { category: "Security System", name: "Access Control System", icon: "Lock" },
+  { category: "Security System", name: "Video Surveillance System", icon: "Video" },
+  { category: "Security System", name: "Intrusion Alarm System", icon: "Bell" },
+  { category: "Security System", name: "Perimeter Protection", icon: "Shield" },
+  { category: "Security System", name: "Public Address System", icon: "Speaker" },
+  
+  { category: "Process & Utility Piping System", name: "Compressed Air Piping", icon: "Wind" },
+  { category: "Process & Utility Piping System", name: "IBR Steam Piping", icon: "Thermometer" },
+  { category: "Process & Utility Piping System", name: "Fuel Transfer System", icon: "Factory" },
+  { category: "Process & Utility Piping System", name: "Chilled Water Piping", icon: "Droplet" },
+  { category: "Process & Utility Piping System", name: "Sewage Transfer System", icon: "Droplet" },
+  { category: "Process & Utility Piping System", name: "Hot & Cold Acoustic Insulation", icon: "Thermometer" },
+  { category: "Process & Utility Piping System", name: "Falls ceiling Insulation", icon: "HardHat" },
+  
+  { category: "Heavy Engineering Fabrication", name: "Pipe Rack & Super Structures", icon: "HardHat" },
+  { category: "Heavy Engineering Fabrication", name: "Tank & Vessel Manufacturing", icon: "Factory" },
+  { category: "Heavy Engineering Fabrication", name: "Tower & Chimney Manufacturing", icon: "Factory" }
 ];
 
+const categoryIcons: Record<string, string> = {
+  "Fire Protection System": "Flame",
+  "Security System": "Shield",
+  "Process & Utility Piping System": "Settings",
+  "Heavy Engineering Fabrication": "Wrench"
+};
+
 export function DetailedServices() {
+  const [items, setItems] = useState<DetailedServiceItem[]>(fallbackItems);
+
+  useEffect(() => {
+    fetch(`${API}/api/detailed-services`)
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setItems(data);
+        }
+      })
+      .catch(() => {
+        // Use fallback data
+      });
+  }, []);
+
+  // Group items by category
+  const categoriesMap = items.reduce((acc, item) => {
+    if (!acc[item.category]) {
+      acc[item.category] = {
+        title: item.category,
+        iconString: categoryIcons[item.category] || 'Activity',
+        items: []
+      };
+    }
+    acc[item.category].items.push(item);
+    return acc;
+  }, {} as Record<string, { title: string, iconString: string, items: DetailedServiceItem[] }>);
+
+  const categories = Object.values(categoriesMap);
+
   return (
     <section className="py-20 bg-slate-50 border-t border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -72,7 +115,7 @@ export function DetailedServices() {
             >
               <div className="flex items-center mb-6 pb-4 border-b border-slate-100">
                 <div className="p-3 bg-slate-100 rounded-md mr-4">
-                  {category.icon}
+                  {iconMap[category.iconString] || iconMap['Activity']}
                 </div>
                 <h3 className="text-xl font-bold text-slate-800">{category.title}</h3>
               </div>
@@ -83,7 +126,7 @@ export function DetailedServices() {
                     key={itemIdx}
                     className="flex items-center text-slate-600 text-sm font-medium"
                   >
-                    {item.icon}
+                    {iconMap[item.icon] || iconMap['Activity']}
                     {item.name}
                   </li>
                 ))}

@@ -1,70 +1,101 @@
-import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
-import {
-  LayoutDashboard,
-  MessageSquare,
-  Wrench,
-  FolderKanban,
-  ArrowLeft,
-} from 'lucide-react';
-
-const navItems = [
-  { to: '/admin', icon: LayoutDashboard, label: 'Dashboard', end: true },
-  { to: '/admin/inquiries', icon: MessageSquare, label: 'Inquiries', end: false },
-  { to: '/admin/services', icon: Wrench, label: 'Services', end: false },
-  { to: '/admin/projects', icon: FolderKanban, label: 'Projects', end: false },
-];
+import React, { useState, useEffect } from 'react';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { LayoutDashboard, MessageSquare, Wrench, FolderKanban, ListTree } from 'lucide-react';
+import { AdminLogin } from './AdminLogin';
 
 export function AdminLayout() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (sessionStorage.getItem('admin_auth') === 'true') {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handleLogout = (e: React.MouseEvent) => {
+    e.preventDefault();
+    sessionStorage.removeItem('admin_auth');
+    setIsAuthenticated(false);
+    navigate('/');
+  };
+
+  if (!isAuthenticated) {
+    return <AdminLogin onLogin={() => setIsAuthenticated(true)} />;
+  }
+
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex h-screen bg-slate-50 overflow-hidden font-sans text-slate-800">
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-slate-200 flex flex-col fixed inset-y-0 left-0 z-30">
-        {/* Logo area */}
-        <div className="h-16 flex items-center px-6 border-b border-slate-200">
-          <span className="text-xl font-bold text-slate-800 tracking-tight">
-            AV Engineering
-          </span>
-          <span className="ml-2 text-xs font-medium bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
-            Admin
-          </span>
+      <aside className="w-64 bg-white border-r border-slate-200 flex flex-col">
+        <div className="p-6 border-b border-slate-200">
+          <h1 className="text-xl font-bold text-blue-600">AV Engineering</h1>
+          <p className="text-xs text-slate-500 mt-1">Admin Panel</p>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 px-3 py-4 space-y-1">
-          {navItems.map(({ to, icon: Icon, label, end }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={end}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                  isActive
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                }`
-              }
-            >
-              <Icon className="w-5 h-5" />
-              {label}
-            </NavLink>
-          ))}
+        <nav className="flex-1 overflow-y-auto py-4">
+          <ul className="space-y-1 px-3">
+            <li>
+              <NavLink 
+                to="/admin" 
+                end
+                className={({ isActive }) => `flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}
+              >
+                <LayoutDashboard className="w-5 h-5 mr-3" />
+                Dashboard
+              </NavLink>
+            </li>
+            <li>
+              <NavLink 
+                to="/admin/inquiries" 
+                className={({ isActive }) => `flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}
+              >
+                <MessageSquare className="w-5 h-5 mr-3" />
+                Inquiries
+              </NavLink>
+            </li>
+            <li>
+              <NavLink 
+                to="/admin/services" 
+                className={({ isActive }) => `flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}
+              >
+                <Wrench className="w-5 h-5 mr-3" />
+                Services
+              </NavLink>
+            </li>
+            <li>
+              <NavLink 
+                to="/admin/all-services" 
+                className={({ isActive }) => `flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}
+              >
+                <ListTree className="w-5 h-5 mr-3" />
+                All Services
+              </NavLink>
+            </li>
+            <li>
+              <NavLink 
+                to="/admin/projects" 
+                className={({ isActive }) => `flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}
+              >
+                <FolderKanban className="w-5 h-5 mr-3" />
+                Projects
+              </NavLink>
+            </li>
+          </ul>
         </nav>
 
-        {/* Back to site link */}
-        <div className="px-3 py-4 border-t border-slate-200">
-          <a
-            href="/"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            Back to Site
+        <div className="p-4 border-t border-slate-200 space-y-2">
+          <a href="/" className="flex items-center text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors">
+            ← Back to Site
+          </a>
+          <a href="#" onClick={handleLogout} className="flex items-center text-sm font-medium text-red-500 hover:text-red-700 transition-colors">
+            Logout
           </a>
         </div>
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 ml-64">
+      <main className="flex-1 overflow-y-auto">
         <div className="p-6 lg:p-8">
           <Outlet />
         </div>

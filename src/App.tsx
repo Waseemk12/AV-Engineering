@@ -16,6 +16,7 @@ import { AdminLayout } from './admin/AdminLayout';
 import { DashboardPage } from './admin/DashboardPage';
 import { InquiriesPage } from './admin/InquiriesPage';
 import { ServicesPage } from './admin/ServicesPage';
+import { AllServicesPage } from './admin/AllServicesPage';
 import { ProjectsPage } from './admin/ProjectsPage';
 
 function PublicSite() {
@@ -47,6 +48,7 @@ export function App() {
         <Route index element={<DashboardPage />} />
         <Route path="inquiries" element={<InquiriesPage />} />
         <Route path="services" element={<ServicesPage />} />
+        <Route path="all-services" element={<AllServicesPage />} />
         <Route path="projects" element={<ProjectsPage />} />
       </Route>
     </Routes>
